@@ -86,7 +86,7 @@ module.exports = {
 };
 
 function displayPlayerCountInfo(servers, interaction){
-    let description = 'Searching for servers...'
+    let description = '';
     let fields = [];
     
     if(interaction.options.getString('region')){
@@ -120,28 +120,31 @@ function displayPlayerCountInfo(servers, interaction){
     );
     
     if(!interaction.options.getString('region')){
-        fields.push({ name: 'Most Popular Region(s)', value: getPopular(servers, 'Region')})
+        fields.push({ name: 'Most Popular Region', value: getPopular(servers, 'Region')})
     }
     
     if(!interaction.options.getString('map')){
-        fields.push({ name: 'Most Popular Map(s)', value: getPopular(servers, 'Map')})
+        fields.push({ name: 'Most Popular Map', value: getPopular(servers, 'Map')})
     }
     
     if(!interaction.options.getString('gamemode')){
-        fields.push({ name: 'Most Popular Gamemode(s)', value: getPopular(servers, 'Gamemode')})
+        fields.push({ name: 'Most Popular Gamemode', value: getPopular(servers, 'Gamemode')})
     }
     
     if(!interaction.options.getString('maxplayers')){
-        fields.push({ name: 'Most Popular Server Size(s)', value: getPopular(servers, 'MaxPlayers')})
+        fields.push({ name: 'Most Popular Server Size', value: getPopular(servers, 'MaxPlayers')})
     }
 
     const newEmbed = new EmbedBuilder()
         .setTitle('BattleBit Servers')
-        .setDescription(description)
         .setColor(0x0099FF)
         .addFields(
             fields
         );
+
+    if(description !== '') {
+        newEmbed.setDescription(description);
+    }
     
     interaction.reply({ embeds: [newEmbed] });
 }
