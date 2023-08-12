@@ -87,7 +87,6 @@ module.exports = {
 
 function displayPlayerCountInfo(servers, interaction){
     let description = '';
-    let fields = [];
     
     if(interaction.options.getString('region')){
         description += '\nRegion: ' + interaction.options.getString('region');
@@ -113,37 +112,33 @@ function displayPlayerCountInfo(servers, interaction){
         }
     }
 
-    fields.push(
-        { name: 'Number of Servers', value: servers.length.toString(), inline: true},
-        { name: 'Players In Game', value: servers.reduce((n, {Players}) => n + Players, 0).toString(), inline: true},
-        { name: 'Players In Queue', value: servers.reduce((n, {QueuePlayers}) => n + QueuePlayers, 0).toString(), inline: true},
-    );
-    
-    if(!interaction.options.getString('region')){
-        fields.push({ name: 'Most Popular Region', value: getPopular(servers, 'Region')})
-    }
-    
-    if(!interaction.options.getString('map')){
-        fields.push({ name: 'Most Popular Map', value: getPopular(servers, 'Map')})
-    }
-    
-    if(!interaction.options.getString('gamemode')){
-        fields.push({ name: 'Most Popular Gamemode', value: getPopular(servers, 'Gamemode')})
-    }
-    
-    if(!interaction.options.getString('maxplayers')){
-        fields.push({ name: 'Most Popular Server Size', value: getPopular(servers, 'MaxPlayers')})
-    }
-
     const newEmbed = new EmbedBuilder()
         .setTitle('BattleBit Servers')
         .setColor(0x0099FF)
         .addFields(
-            fields
+            { name: 'Number of Servers', value: servers.length.toString(), inline: true},
+            { name: 'Players In Game', value: servers.reduce((n, {Players}) => n + Players, 0).toString(), inline: true},
+            { name: 'Players In Queue', value: servers.reduce((n, {QueuePlayers}) => n + QueuePlayers, 0).toString(), inline: true},
         );
 
     if(description !== '') {
         newEmbed.setDescription(description);
+    }
+    
+    if(!interaction.options.getString('region')){
+        newEmbed.addFields({ name: 'Most Popular Region', value: getPopular(servers, 'Region')})
+    }
+    
+    if(!interaction.options.getString('map')){
+        newEmbed.addFields({ name: 'Most Popular Map', value: getPopular(servers, 'Map')})
+    }
+    
+    if(!interaction.options.getString('gamemode')){
+        newEmbed.addFields({ name: 'Most Popular Gamemode', value: getPopular(servers, 'Gamemode')})
+    }
+    
+    if(!interaction.options.getString('maxplayers')){
+        newEmbed.addFields({ name: 'Most Popular Server Size', value: getPopular(servers, 'MaxPlayers')})
     }
     
     interaction.reply({ embeds: [newEmbed] });
