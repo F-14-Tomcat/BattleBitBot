@@ -152,7 +152,6 @@ function retrieveApiData() {
 }
 
 function getPopular(servers, property) {
-    let max = {name: 'Unknown', servers: 0, players: 0};
     let list = [];
     for(server of servers){
         let name = server[property];
@@ -164,12 +163,11 @@ function getPopular(servers, property) {
             current = {name: name, servers: 1, players: server.Players};
             list.push(current);
         }
-        if(current.players > max.players){
-            max = current;
-        }else
-        if(current.players == max.players && current.name !== max.name){
-            max.name += ", " + current.name;
-        }
     }
-    return `${max.name}: ${max.players} players on ${max.servers} servers`;
+    list.sort(function(a, b){return b.players - a.players});
+    let returnString = '';
+    for(let i = 0; i < 3; i++){
+        returnString += `${i + 1}. ${list[i].name}: ${list[i].players} players on ${list[i].servers} servers\n`;
+    }
+    return returnString;
 };
