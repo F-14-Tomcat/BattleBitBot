@@ -53,6 +53,7 @@ module.exports = {
                 { name: 'Frontline', value: 'FRONTLINE' },
                 { name: 'Rush', value: 'RUSH'},
                 { name: 'Team Death Match', value: 'TDM' },
+                { name: 'Elimination', value: 'ELI' },
                 { name: 'Voxel', value: 'VoxelFortify' },
             )
             .setRequired(false)
@@ -166,7 +167,7 @@ function getPopular(servers, property) {
     }
     list.sort(function(a, b){return b.players - a.players});
     let returnString = '';
-    for(let i = 0; i < 3; i++){
+    for(let i = 0; i < Math.min(3, list.length); i++){
         returnString += `${i + 1}. ${list[i].name}: ${list[i].players} players on ${list[i].servers} servers\n`;
     }
     return returnString;
