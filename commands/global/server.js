@@ -116,6 +116,8 @@ function displayPlayerCountInfo(servers, interaction){
     const newEmbed = new EmbedBuilder()
         .setTitle('BattleBit Servers')
         .setColor(0x0099FF)
+        .setFooter({ text: `BattleBit Version: ${servers[0].Build}` })
+        .setTimestamp()
         .addFields(
             { name: 'Number of Servers', value: servers.length.toString(), inline: true},
             { name: 'Players In Game', value: servers.reduce((n, {Players}) => n + Players, 0).toString(), inline: true},
