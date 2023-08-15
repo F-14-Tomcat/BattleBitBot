@@ -116,7 +116,6 @@ function displayPlayerCountInfo(servers, interaction){
     const newEmbed = new EmbedBuilder()
         .setTitle('BattleBit Servers')
         .setColor(0x0099FF)
-        .setFooter({ text: `BattleBit Version: ${servers[0].Build}` })
         .setTimestamp()
         .addFields(
             { name: 'Number of Servers', value: servers.length.toString(), inline: true},
@@ -130,6 +129,8 @@ function displayPlayerCountInfo(servers, interaction){
 
     if(servers.length === 0){
         return interaction.reply({ embeds: [newEmbed] });
+    }else{
+        newEmbed.setFooter({ text: `BattleBit Version: ${servers[0].Build}` })
     }
     
     if(!interaction.options.getString('region')){
