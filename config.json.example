@@ -1,0 +1,6 @@
+{
+    "token": "your-token",
+    "clientId": "your-bot-id",
+    "guildId": "private-guild-id-for-guild-only-commands",
+    "channelId": "private-channel-id-for-updates"
+}
