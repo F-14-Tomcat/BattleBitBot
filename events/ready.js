@@ -1,34 +1,47 @@
 const { Events, ActivityType } = require('discord.js');
-const axios = require('axios');
-const { token, version } = require('../config.json');
 
 module.exports = {
     name: Events.ClientReady,
     once: true,
-    execute(client) {
-        let servers = [];
-        retrieveApiData()
-            .then(apiData => {
-                if (apiData) {
-                    servers = JSON.parse(apiData.trim());
-                    setActivity(client, servers);
-                }
-            })
-            .catch(error => {
-                interaction.reply("error");
-                console.error("Error occurred while retrieving API data:", error.message);
-            });
+    async execute(client) {
+        setInterval(updateActivity, 5000, client);
+        console.log(`Ready! Logged in as ${client.user.tag}`);
     },
 };
 
-function retrieveApiData() {
+async function updateActivity(client) {
+    let servers = await retrieveServerData();
+    client.user.setActivity({ name: 'Name', type: ActivityType.Custom, state: `BattleBit Servers: ${servers.length.toString()} | Players in Game: ${servers.reduce((n, {Players}) => n + Players, 0).toString()} | Most Popular Region: ${getMostPopular(servers, 'Region')}`});
+}
+
+function retrieveServerData() {
     const url = "https://publicapi.battlebit.cloud/Servers/GetServerList";
     return fetch(url).then(response => {
-        return response.text();
+        return response.text().then(servers => {
+            if (servers) {
+                return JSON.parse(servers.trim());
+            }
+        })
+        .catch(error => {
+            interaction.reply("error");
+            console.error("Error occurred while retrieving API data:", error.message);
+        });
     });
 }
 
-function setActivity(client, servers) {
-    client.user.setActivity('test', { type: 4, state: `BattleBit Servers: ${servers.length.toString()}\tPlayers in Game: ${servers.reduce((n, {Players}) => n + Players, 0).toString()}`});
-    console.log(`Ready! Logged in as ${client.user.tag}`);
-}
+function getMostPopular(servers, property) {
+    let list = [];
+    for(server of servers){
+        let name = server[property];
+        let current = list.find(item => item.name == name);
+        if(current  !== undefined){
+            current.servers++;
+            current.players += server.Players;
+        }else{
+            current = {name: name, servers: 1, players: server.Players};
+            list.push(current);
+        }
+    }
+    list.sort(function(a, b){return b.players - a.players});
+    return list[0].name;
+};
