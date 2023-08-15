@@ -122,12 +122,12 @@ function displayPlayerCountInfo(servers, interaction){
             { name: 'Players In Queue', value: servers.reduce((n, {QueuePlayers}) => n + QueuePlayers, 0).toString(), inline: true},
         );
 
-    if(servers.length === 0){
-        return interaction.reply({ embeds: [newEmbed] });
-    }
-
     if(description !== '') {
         newEmbed.setDescription(description);
+    }
+
+    if(servers.length === 0){
+        return interaction.reply({ embeds: [newEmbed] });
     }
     
     if(!interaction.options.getString('region')){
