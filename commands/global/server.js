@@ -70,89 +70,87 @@ module.exports = {
             )
             .setRequired(false)
         ),
+
     async execute(interaction) {
-        retrieveApiData()
-            .then(apiData => {
-                if (apiData) {
-                    apiData = JSON.parse(apiData.trim());
-                    displayPlayerCountInfo(apiData, interaction);
-                }
-            })
-            .catch(error => {
-                interaction.reply("error");
-                console.error("Error occurred while retrieving API data:", error.message);
-            });
-        
+        let servers = await retrieveServerData();
+        let description = '';
+
+        if(interaction.options.getString('region')){
+            description += '\nRegion: ' + interaction.options.getString('region');
+            servers = servers.filter(server => server.Region === interaction.options.getString('region'));
+        }
+
+        if(interaction.options.getString('map')){
+            description += '\nMap: ' + interaction.options.getString('map');
+            servers = servers.filter(server => server.Map === interaction.options.getString('map'));
+        }
+
+        if(interaction.options.getString('gamemode')){
+            description += '\nGamemode: ' + interaction.options.getString('gamemode');
+            servers = servers.filter(server => server.Gamemode === interaction.options.getString('gamemode'));
+        }
+
+        if(interaction.options.getString('maxplayers')){
+            if(interaction.options.getString('maxplayers') === 'Other'){
+                servers = servers.filter(server => (server.MaxPlayers !== 254 && server.MaxPlayers !== 128 && server.MaxPlayers !== 64 && server.MaxPlayers !== 32));
+            }else{
+                description += '\nMax Players: ' + interaction.options.getString('maxplayers');
+                servers = servers.filter(server => server.MaxPlayers === parseInt(interaction.options.getString('maxplayers')));
+            }
+        }
+
+        const newEmbed = new EmbedBuilder()
+            .setTitle('BattleBit Servers')
+            .setColor(0x0099FF)
+            .setTimestamp()
+            .addFields(
+                { name: 'Number of Servers', value: servers.length.toString(), inline: true},
+                { name: 'Players In Game', value: servers.reduce((n, {Players}) => n + Players, 0).toString(), inline: true},
+                { name: 'Players In Queue', value: servers.reduce((n, {QueuePlayers}) => n + QueuePlayers, 0).toString(), inline: true},
+            );
+
+        if(description !== '') {
+            newEmbed.setDescription(description);
+        }
+
+        if(servers.length === 0){
+            return interaction.reply({ embeds: [newEmbed] });
+        }else{
+            newEmbed.setFooter({ text: `BattleBit Version: ${servers[0].Build}` })
+        }
+
+        if(!interaction.options.getString('region')){
+            newEmbed.addFields({ name: 'Most Popular Region', value: getPopular(servers, 'Region')})
+        }
+
+        if(!interaction.options.getString('map')){
+            newEmbed.addFields({ name: 'Most Popular Map', value: getPopular(servers, 'Map')})
+        }
+
+        if(!interaction.options.getString('gamemode')){
+            newEmbed.addFields({ name: 'Most Popular Gamemode', value: getPopular(servers, 'Gamemode')})
+        }
+
+        if(!interaction.options.getString('maxplayers')){
+            newEmbed.addFields({ name: 'Most Popular Server Size', value: getPopular(servers, 'MaxPlayers')})
+        }
+
+        return interaction.reply({ embeds: [newEmbed] });
     },
 };
 
-function displayPlayerCountInfo(servers, interaction){
-    let description = '';
-    
-    if(interaction.options.getString('region')){
-        description += '\nRegion: ' + interaction.options.getString('region');
-        servers = servers.filter(server => server.Region === interaction.options.getString('region'));
-    }
-
-    if(interaction.options.getString('map')){
-        description += '\nMap: ' + interaction.options.getString('map');
-        servers = servers.filter(server => server.Map === interaction.options.getString('map'));
-    }
-
-    if(interaction.options.getString('gamemode')){
-        description += '\nGamemode: ' + interaction.options.getString('gamemode');
-        servers = servers.filter(server => server.Gamemode === interaction.options.getString('gamemode'));
-    }
-    
-    if(interaction.options.getString('maxplayers')){
-        if(interaction.options.getString('maxplayers') === 'Other'){
-            servers = servers.filter(server => (server.MaxPlayers !== 254 && server.MaxPlayers !== 128 && server.MaxPlayers !== 64 && server.MaxPlayers !== 32));
-        }else{
-            description += '\nMax Players: ' + interaction.options.getString('maxplayers');
-            servers = servers.filter(server => server.MaxPlayers === parseInt(interaction.options.getString('maxplayers')));
-        }
-    }
-
-    const newEmbed = new EmbedBuilder()
-        .setTitle('BattleBit Servers')
-        .setColor(0x0099FF)
-        .addFields(
-            { name: 'Number of Servers', value: servers.length.toString(), inline: true},
-            { name: 'Players In Game', value: servers.reduce((n, {Players}) => n + Players, 0).toString(), inline: true},
-            { name: 'Players In Queue', value: servers.reduce((n, {QueuePlayers}) => n + QueuePlayers, 0).toString(), inline: true},
-        );
-
-    if(description !== '') {
-        newEmbed.setDescription(description);
-    }
-
-    if(servers.length === 0){
-        return interaction.reply({ embeds: [newEmbed] });
-    }
-    
-    if(!interaction.options.getString('region')){
-        newEmbed.addFields({ name: 'Most Popular Region', value: getPopular(servers, 'Region')})
-    }
-    
-    if(!interaction.options.getString('map')){
-        newEmbed.addFields({ name: 'Most Popular Map', value: getPopular(servers, 'Map')})
-    }
-    
-    if(!interaction.options.getString('gamemode')){
-        newEmbed.addFields({ name: 'Most Popular Gamemode', value: getPopular(servers, 'Gamemode')})
-    }
-    
-    if(!interaction.options.getString('maxplayers')){
-        newEmbed.addFields({ name: 'Most Popular Server Size', value: getPopular(servers, 'MaxPlayers')})
-    }
-    
-    return interaction.reply({ embeds: [newEmbed] });
-}
-
-function retrieveApiData() {
+function retrieveServerData() {
     const url = "https://publicapi.battlebit.cloud/Servers/GetServerList";
     return fetch(url).then(response => {
-        return response.text();
+        return response.text().then(servers => {
+            if (servers) {
+                return JSON.parse(servers.trim());
+            }
+        })
+        .catch(error => {
+            interaction.reply("error");
+            console.error("Error occurred while retrieving API data:", error.message);
+        });
     });
 }
 
