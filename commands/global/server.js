@@ -122,6 +122,10 @@ function displayPlayerCountInfo(servers, interaction){
             { name: 'Players In Queue', value: servers.reduce((n, {QueuePlayers}) => n + QueuePlayers, 0).toString(), inline: true},
         );
 
+    if(servers.length === 0){
+        return interaction.reply({ embeds: [newEmbed] });
+    }
+
     if(description !== '') {
         newEmbed.setDescription(description);
     }
@@ -142,7 +146,7 @@ function displayPlayerCountInfo(servers, interaction){
         newEmbed.addFields({ name: 'Most Popular Server Size', value: getPopular(servers, 'MaxPlayers')})
     }
     
-    interaction.reply({ embeds: [newEmbed] });
+    return interaction.reply({ embeds: [newEmbed] });
 }
 
 function retrieveApiData() {
