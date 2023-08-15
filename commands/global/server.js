@@ -127,6 +127,10 @@ function displayPlayerCountInfo(servers, interaction){
     if(description !== '') {
         newEmbed.setDescription(description);
     }
+
+    if(servers.length === 0){
+        return interaction.reply({ embeds: [newEmbed] });
+    }
     
     if(!interaction.options.getString('region')){
         newEmbed.addFields({ name: 'Most Popular Region', value: getPopular(servers, 'Region')})
@@ -144,7 +148,7 @@ function displayPlayerCountInfo(servers, interaction){
         newEmbed.addFields({ name: 'Most Popular Server Size', value: getPopular(servers, 'MaxPlayers')})
     }
     
-    interaction.reply({ embeds: [newEmbed] });
+    return interaction.reply({ embeds: [newEmbed] });
 }
 
 function retrieveApiData() {
