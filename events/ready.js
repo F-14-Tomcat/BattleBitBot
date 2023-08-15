@@ -4,14 +4,14 @@ module.exports = {
     name: Events.ClientReady,
     once: true,
     async execute(client) {
-        setInterval(updateActivity, 5000, client);
+        setInterval(updateActivity, 3000, client);
         console.log(`Ready! Logged in as ${client.user.tag}`);
     },
 };
 
 async function updateActivity(client) {
     let servers = await retrieveServerData();
-    client.user.setActivity({ name: 'Name', type: ActivityType.Custom, state: `BattleBit Servers: ${servers.length.toString()} | Players in Game: ${servers.reduce((n, {Players}) => n + Players, 0).toString()} | Most Popular Region: ${getMostPopular(servers, 'Region')}`});
+    client.user.setActivity({ name: 'Name', type: ActivityType.Custom, state: `Players in Game: ${servers.reduce((n, {Players}) => n + Players, 0).toString()} | Players in Queue: ${servers.reduce((n, {QueuePlayers}) => n + QueuePlayers, 0).toString()} | BattleBit Servers: ${servers.length.toString()} | Most Popular Region: ${getMostPopular(servers, 'Region')}`});
 }
 
 function retrieveServerData() {
