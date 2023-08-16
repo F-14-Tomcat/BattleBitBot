@@ -50,20 +50,3 @@ function retrieveServerData() {
         });
     });
 }
-
-function getMostPopular(servers, property) {
-    let list = [];
-    for(server of servers){
-        let name = server[property];
-        let current = list.find(item => item.name == name);
-        if(current  !== undefined){
-            current.servers++;
-            current.players += server.Players;
-        }else{
-            current = {name: name, servers: 1, players: server.Players};
-            list.push(current);
-        }
-    }
-    list.sort(function(a, b){return b.players - a.players});
-    return list[0].name;
-};
