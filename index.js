@@ -23,7 +23,7 @@ if (process.argv[2]) {
 } else {
     // Create a new client instance
     const client = new Client({ intents: [GatewayIntentBits.Guilds] });
-    setTimeout(login, 1000, client, token);
+    client.login(token);
 
     const eventsPath = path.join(__dirname, 'events');
     const eventFiles = fs.readdirSync(eventsPath).filter(file => file.endsWith('.js'));
@@ -134,8 +134,4 @@ async function reloadGlobal() {
             console.error(error);
         }
     })();
-}
-
-async function login(client, token){
-    client.login(token);
 }
