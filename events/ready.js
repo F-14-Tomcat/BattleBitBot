@@ -46,8 +46,7 @@ function retrieveServerData() {
             }
         })
         .catch(error => {
-            interaction.reply("error");
-            console.error("Error occurred while retrieving API data:", error.message);
+            console.error("Error occurred while retrieving API data in ready.js:", error.message);
         });
     });
 }
