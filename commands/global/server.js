@@ -102,7 +102,6 @@ module.exports = {
         const newEmbed = new EmbedBuilder()
             .setTitle('BattleBit Servers')
             .setColor(0x0099FF)
-            .setTimestamp()
             .addFields(
                 { name: 'Number of Servers', value: servers.length.toString(), inline: true},
                 { name: 'Players In Game', value: servers.reduce((n, {Players}) => n + Players, 0).toString(), inline: true},
@@ -113,27 +112,23 @@ module.exports = {
             newEmbed.setDescription(description);
         }
 
-        if(servers.length === 0){
-            return interaction.reply({ embeds: [newEmbed] });
-        }else{
-            newEmbed.setFooter({ text: `BattleBit Version: ${servers[0].Build}` })
-        }
-
         if(!interaction.options.getString('region')){
-            newEmbed.addFields({ name: 'Most Popular Region', value: getPopular(servers, 'Region')})
+            newEmbed.addFields({ name: 'Most Popular Region', value: getPopular(servers, 'Region'), inline: true})
         }
 
         if(!interaction.options.getString('map')){
-            newEmbed.addFields({ name: 'Most Popular Map', value: getPopular(servers, 'Map')})
+            newEmbed.addFields({ name: 'Most Popular Map', value: getPopular(servers, 'Map'), inline: true})
         }
 
         if(!interaction.options.getString('gamemode')){
-            newEmbed.addFields({ name: 'Most Popular Gamemode', value: getPopular(servers, 'Gamemode')})
+            newEmbed.addFields({ name: 'Most Popular Gamemode', value: getPopular(servers, 'Gamemode'), inline: true})
         }
 
         if(!interaction.options.getString('maxplayers')){
-            newEmbed.addFields({ name: 'Most Popular Server Size', value: getPopular(servers, 'MaxPlayers')})
+            newEmbed.addFields({ name: 'Most Popular Server Size', value: getPopular(servers, 'MaxPlayers'), inline: true})
         }
+
+        newEmbed.addFields({ name: '\u200b', value: 'Click [HERE](https://discord.com/api/oauth2/authorize?client_id=1139370092547809372&permissions=0&scope=applications.commands%20bot) to add the bot to your server.'});
 
         return interaction.reply({ embeds: [newEmbed] });
     },
