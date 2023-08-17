@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder, AttachmentBuilder } = require('discord.js');
 const fetch = require('node-fetch');
-const { createCanvas, loadImage } = require('canvas');
+const { createCanvas, loadImage } = require('@napi-rs/canvas');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -243,5 +243,5 @@ async function generateImage(region, map, gamemode, maxplayers) {
     ctx.fillStyle = 'white';
     ctx.fillText(gamemode, (canvas.width / 2), 10 + Math.ceil(imageHeight/8));
     ctx.fillText(maxplayers, (canvas.width / 2), 2 * (10 + Math.ceil(imageHeight/8)));
-    return canvas.createPNGStream();
+    return canvas.encode('png')
 }

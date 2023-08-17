@@ -9,7 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "canvas": "^2.11.2",
+    "@napi-rs/canvas": "^0.1.43",
     "discord.js": "^14.13.0-dev.1692058167-24fbb11ba.0",
     "node-fetch": "^2.6.12"
   }
