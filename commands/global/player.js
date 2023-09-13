@@ -57,7 +57,7 @@ function makeList(list, player) {
         let tempStat = Object.keys(stat)[0].replace(/([a-z])([A-Z])/g, '$1 $2');
         tempStat = tempStat.split(' ');
         tempStat.shift();
-        returnString += `${tempStat.join(' ')}: ${stat[Object.keys(stat)[0]].find(index => index.Name == player).Value}\n`
+        returnString += `${tempStat.join(' ')}: ${stat[Object.keys(stat)[0]].find(index => index.Name == player).Value} (#${stat[Object.keys(stat)[0]].findIndex(index => index.Name == player) + 1} globally)\n`
     });
     return returnString;
 }
