@@ -19,7 +19,7 @@ module.exports = {
         leaderboard = leaderboard.filter(stat => stat[Object.keys(stat)[0]].some(index => index.Name == player));
 
         if(leaderboard.length == 0){
-            return interaction.reply({content: `${player} could not be found in the leaderboards.`, ephemeral: true } );
+            return interaction.reply({content: `${player} could not be found in the leaderboards. Only the top 1000 players are shown.`, ephemeral: true } );
         }
 
         const newEmbed = new EmbedBuilder()
