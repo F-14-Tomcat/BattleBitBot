@@ -32,7 +32,7 @@ module.exports = {
         ),
 
     async execute(interaction) {
-        //interaction.deferReply({ ephemeral: true });
+        interaction.deferReply({ ephemeral: true });
         let leaderboard = await retrieveLeaderboardData();
         let amount = 3;
         if(interaction.options.getString('show')){

@@ -13,7 +13,7 @@ module.exports = {
         ),
 
     async execute(interaction) {
-        //interaction.deferReply({ ephemeral: true });
+        interaction.deferReply({ ephemeral: true });
         let leaderboard = await retrieveLeaderboardData();
         let player = interaction.options.getString('name');
         leaderboard = leaderboard.filter(stat => stat[Object.keys(stat)[0]].some(index => index.Name == player));
