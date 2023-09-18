@@ -5,7 +5,8 @@ module.exports = {
     name: Events.ClientReady,
     once: true,
     async execute(client) {
-        setInterval(updateActivity, 5000, client);
+        //setInterval(updateActivity, 5000, client);
+	client.user.setActivity({name: 'Name', type: ActivityType.Custom, state: 'Use /player or /leaderboard to view global stats'})
         console.log(`Ready! Logged in as ${client.user.tag}`);
     },
 };

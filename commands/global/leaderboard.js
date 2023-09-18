@@ -32,7 +32,7 @@ module.exports = {
         ),
 
     async execute(interaction) {
-        interaction.deferReply({ ephemeral: true });
+        await interaction.deferReply();
         let leaderboard = await retrieveLeaderboardData();
         let amount = 3;
         if(interaction.options.getString('show')){
@@ -53,9 +53,9 @@ module.exports = {
 
         newEmbed.addFields({ name: '\u200b', value: 'Click [HERE](https://discord.com/api/oauth2/authorize?client_id=1139370092547809372&permissions=0&scope=applications.commands%20bot) to add the bot to your server.'});
         if(interaction.deferred){
-            return interaction.editReply({ embeds: [newEmbed]});
+            return interaction.editReply({ embeds: [newEmbed], ephemeral: false });
         }
-        return interaction.reply({ embeds: [newEmbed]});
+        return interaction.reply({ embeds: [newEmbed], ephemeral: false });
     },
 };
 
@@ -63,6 +63,7 @@ function retrieveLeaderboardData() {
     const url = "https://publicapi.battlebit.cloud/Leaderboard/Get";
     return fetch(url).then(response => {
         return response.text().then(leaderboard => {
+
             if (leaderboard) {
                 return JSON.parse(leaderboard.trim());
             }

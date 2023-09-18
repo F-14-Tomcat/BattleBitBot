@@ -13,13 +13,13 @@ module.exports = {
         ),
 
     async execute(interaction) {
-        interaction.deferReply({ ephemeral: true });
+        await interaction.deferReply();
         let leaderboard = await retrieveLeaderboardData();
         let player = interaction.options.getString('name');
         leaderboard = leaderboard.filter(stat => stat[Object.keys(stat)[0]].some(index => index.Name == player));
 
         if(leaderboard.length == 0){
-            return interaction.reply({content: `${player} could not be found in the leaderboards. Only the top 1000 players are shown.`, ephemeral: true } );
+            return interaction.editReply({content: `${player} could not be found in the leaderboards. Only the top 5000 players are shown.`, ephemeral: true } );
         }
 
         const newEmbed = new EmbedBuilder()
